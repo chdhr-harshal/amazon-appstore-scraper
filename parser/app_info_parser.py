@@ -80,7 +80,7 @@ class parser:
         total_reviews = total_reviews.split(' ')[0].replace(',','')
         return total_reviews
 
-    def get_star_rating(self):
+    def get_avg_star_rating(self):
         star_rating = self.soup.find('span', {'class':'a-icon-alt'}).next.split(' ')[0]
         return star_rating
         
@@ -117,3 +117,41 @@ class parser:
             names.append(category_name)
 
         return names
+
+    def get_icon_url(self):
+        url = self.soup.find('img', {'class':'masrw-main-image'})['src']
+        return url.strip()
+
+    def get_permissions(self):
+        perms_div = self.soup.find('div',{'id':'mas-app-permissions'}).find('ul')
+        perms = perms_div.findAll('span')
+
+        permissions = [perm.text.strip() for perm in perms]
+        return permissions
+
+    def get_developer_info(self):
+        dev_info = {}
+        dev_name = self.get_developer()
+        dev_info['name'] = dev_name
+
+        dev_div = self.soup.find('div', {'id':'mas-developer-info'}).findAll('span')
+        dev_rows = [row.text.strip() for row in dev_div]
+
+        for row in dev_rows:
+            if '@' in row:
+                dev_info['email'] = row
+            if 'http://' in row:
+                dev_info['website'] = row
+            if 'email' in dev_info and 'website' in dev_info:
+                break
+
+        return dev_info
+
+    def get_description(self):
+        description = self.soup.find('div', {'id':'mas-product-description'})
+        return description.find('div').text.strip()
+
+    def get_similar_apps(self):
+        apps = self.soup.findAll('div', {'class':'a-section a-spacing-none p13nimp p13n-asin'})
+        asins = [app['data-asin'] for app in apps]
+        return asins

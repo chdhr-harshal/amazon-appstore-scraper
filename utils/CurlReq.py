@@ -3,6 +3,7 @@
 import subprocess
 import random
 import urllib
+from fake_useragent import UserAgent
 
 # Read proxy credentials
 f = open('/research/analytics/proxylist/proxy_credentials','r')
@@ -21,6 +22,8 @@ class request():
 
         self.read_http_proxy_list()
         self.read_socks_proxy_list()
+        
+        self.ua = UserAgent()
 
     def fetch(self, url, data=None, proxy=True):
         if proxy == False:
@@ -50,8 +53,7 @@ class request():
             data = urllib.urlencode(data)
             cmd += """--data {0} """.format(data)
         
-        user_agent = self.get_user_agent()
-        cmd += """--user-agent {0} """.format(user_agent)
+        cmd += """--user-agent {0} """.format(self.ua.random)
         cmd += url
 
         args = cmd.split()
@@ -72,31 +74,3 @@ class request():
 
         self.socks_proxy_list = [proxy.strip() for proxy in proxies]
 
-    def get_user_agent(self):
-        # Randomize user-agent for each proxy browser instance
-        platform = random.choice(['Macintosh', 'Windows', 'X11'])
-        if platform == 'Macintosh':
-            os = random.choice(['68K','PPC'])
-        elif platform == 'Windows':
-            os = random.choice(['Win3.11', 'WinNT3.51', 'WinNT4.0', 'Windows NT 5.0', 
-                                'Windows NT 5.1', 'Windows NT     5.2', 'Windows NT 6.0', 
-                                'Windows NT 6.1', 'Windows NT 6.2', 'Win95', 'Win98', 'Win 9x 4.90', 'WindowsCE'])
-        elif platform == 'X11':
-            os = random.choice(['Linux i686', 'Linux x86_64'])
-
-        browser = 'firefox'
-        year = str(random.randint(2000, 2015))
-        month = random.randint(1, 12) 
-        if month < 10: 
-            month = '0' + str(month)
-        else:
-            month = str(month)
-        day = random.randint(1, 30) 
-        if day < 10: 
-            day = '0' + str(day)
-        else:
-            day = str(day)
-        gecko = year + month + day 
-        version = random.choice(['7.0', '8.0', '9.0', '10.0', '11.0', '12.0', '13.0', '14.0', '15.0'])
-
-        return 'Mozilla/5.0 (' + os + '; rv:' + version + ') Gecko/' + gecko + ' Firefox/' + version

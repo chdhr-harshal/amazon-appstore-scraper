@@ -22,24 +22,29 @@ class request():
         self.read_http_proxy_list()
         self.read_socks_proxy_list()
 
-    def fetch(self, url, data=None):
-        ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
-        key = random.random() 
-        if key < ratio:
-            # Make request through http proxy
-            rand = random.randint(0, len(self.http_proxy_list)-1)
-            proxy = self.http_proxy_list[rand]
-            cmd = """curl --proxy https://{0} """.format(proxy)
+    def fetch(self, url, data=None, proxy=True):
+        if proxy == False:
+            # Make request without any proxy
+            cmd = """curl """
         else:
-            # Make request through socks proxy
-            rand = random.randint(0, len(self.socks_proxy_list)-1)
-            proxy = self.socks_proxy_list[rand]
-            cmd = """curl --socks5-hostname {0} """.format(proxy)
+            ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
+            key = random.random() 
+            if key < ratio:
+                # Make request through http proxy
+                rand = random.randint(0, len(self.http_proxy_list)-1)
+                proxy = self.http_proxy_list[rand]
+                cmd = """curl --proxy https://{0} """.format(proxy)
+            else:
+                # Make request through socks proxy
+                rand = random.randint(0, len(self.socks_proxy_list)-1)
+                proxy = self.socks_proxy_list[rand]
+                cmd = """curl --socks5-hostname {0} """.format(proxy)
 
-        # Authentication and timeout parameters
-        cmd += "--proxy-user {0}:{1} ".format(username, password)
-        cmd += "--connect-timeout 5 "
-   
+            # Authentication and timeout parameters
+            cmd += "--proxy-user {0}:{1} ".format(username, password)
+        
+        # Parts of command common for both proxy and no proxy requests
+        cmd += "--connect-timeout 5 "   
         # Data for POST request 
         if data:
             data = urllib.urlencode(data)
@@ -53,10 +58,7 @@ class request():
         process = subprocess.Popen(args, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = process.communicate()
 
-        if stdout:
-            return stdout
-        else:
-            return None
+        return (stdout, stderr)
 
     def read_http_proxy_list(self):
         with open('/research/analytics/proxylist/http_proxylist/proxylist') as f:
@@ -98,4 +100,3 @@ class request():
         version = random.choice(['7.0', '8.0', '9.0', '10.0', '11.0', '12.0', '13.0', '14.0', '15.0'])
 
         return 'Mozilla/5.0 (' + os + '; rv:' + version + ') Gecko/' + gecko + ' Firefox/' + version
-

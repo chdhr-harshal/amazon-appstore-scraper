@@ -52,9 +52,8 @@ class Bootstrapper:
                                     console-only logging)')
 
         parser.add_argument('--use-proxy',
-                            type=bool,
-                            help='Boolean indicating proxy usage',
-                            default=False)
+                            action='store_true',
+                            help='Use proxy')
 
         return parser
 

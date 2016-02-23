@@ -53,7 +53,6 @@ class Utils:
         file_log_verbosity = args['file_log_verbosity']
 
         # Console log Level
-
         cli_log_level = Utils.get_log_level_from_string(cli_log_verbosity)
         file_log_level = Utils.get_log_level_from_string(file_log_verbosity)
 

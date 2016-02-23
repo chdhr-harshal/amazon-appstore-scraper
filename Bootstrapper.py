@@ -8,7 +8,17 @@ from utils import Utils
 class Bootstrapper:
 
     def __init__(self):
-        # Initialize stuff
+        """
+        Database access parameters
+        """
+        params = {}
+        params['server'] = 'ist-www-mysql-prod.bu.edu'
+        params['port'] = '3309'
+        params['database'] = 'amazon_appstore'
+        params['username'] = 'amazon_appstore'
+        params['password'] = 'sP7sw8chuchu'
+
+        self._params = params
 
     def get_arguments_parser(self):
         """
@@ -64,4 +74,5 @@ class Bootstrapper:
 # Starting Point
 if __name__ == "__main__":
         bootstrapper = Bootstrapper()
+        bootstrapper.start_bootstrapper()
         

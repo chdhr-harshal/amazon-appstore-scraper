@@ -1,3 +1,5 @@
+# !/home/grad3/harshal/py_env/my_env/bin/python2.7
+
 from bs4 import BeautifulSoup as bs
 from datetime import datetime
 import re
@@ -24,7 +26,7 @@ class parser:
         developer_url = self.soup.find('div', {'class':'buying'}).find('a')['href']
         return 'http://www.amazon.com' + developer_url
 
-    def get_mas_rating(self):
+    def get_content_rating(self):
         mas_rating = self.soup.find('span', {'class':'mas-rating-value'}).find('a').next
         return mas_rating.strip()
 
@@ -155,3 +157,26 @@ class parser:
         apps = self.soup.findAll('div', {'class':'a-section a-spacing-none p13nimp p13n-asin'})
         asins = [app['data-asin'] for app in apps]
         return asins
+
+    def get_app_info(self):
+        return {'asin' : self.get_asin(),
+                'title' : self.get_title(),
+                'developer' : self.get_developer(),
+                'developer_url' : self.get_developer_url(),
+                'content_rating' : self.get_content_rating(),
+                'price' : self.get_price(),
+                'iap' : self.get_iap(),
+                'release_date' : self.get_release_date(),
+                'overall_rank' : self.get_overall_rank(),
+                'version' : self.get_version(),
+                'size' : self.get_size(),
+                'min_os_version' : self.get_min_os_version(),
+                'total_reviews' : self.get_total_reviews(),
+                'avg_star_rating' : self.get_avg_star_rating(),
+                'category_rank' : self.get_category_rank(),
+                'categories' : self.get_categories(),
+                'icon_url' : self.get_icon_url(),
+                'permissions' : self.get_permissions(),
+                'developer_info' : self.get_developer_info(),
+                'description' : self.get_description(),
+                'similar_apps' : self.get_similar_apps()}

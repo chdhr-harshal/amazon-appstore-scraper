@@ -1,3 +1,5 @@
+# !/home/grad3/harshal/py_env/my_env/bin/python2.7
+
 from bs4 import BeautifulSoup as bs
 from datetime import datetime
 import re
@@ -9,7 +11,7 @@ class parser:
         self.soup = bs(self.html, "lxml")
 
     def get_reviews(self):
-        reviews_data = {}
+        reviews_data = []
         container = self.soup.find('div', {'id':'cm_cr-review_list'})
         reviews = container.findAll('div', {'class':'a-section review'})
 
@@ -60,7 +62,8 @@ class parser:
 
 
         
-            reviews_data[review_id] = dict({
+            reviews_data.append({
+                'review_id' : review_id,
                 'asin' : asin,
                 'star_rating' : star_rating,
                 'title' : title,
@@ -78,4 +81,3 @@ class parser:
 
 
         return reviews_data 
-            

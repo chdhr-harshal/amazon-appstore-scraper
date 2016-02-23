@@ -74,7 +74,7 @@ class Worker:
                             action='store_true',
                             help='Get minimum supported os version of the app')
 
-        parser.add_argument('-tot-reviews',
+        parser.add_argument('-total-reviews',
                             action='store_true',
                             help='Get total reviews of the app')
 
@@ -93,6 +93,10 @@ class Worker:
         parser.add_argument('-categories',
                             action='store_true',
                             help='Get all categories of the app')
+
+        parser.add_argument('-icon-url',
+                            action='store_true',
+                            help='Get icon url of the app')
 
         parser.add_argument('-permissions',
                             action='store_true',

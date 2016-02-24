@@ -1,6 +1,6 @@
 # !/home/grad3/harshal/py_env/my_env/bin/python2.7
 
-class categoryies:
+class categories:
     urls : {
     "BOOKS_COMICS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408444011",
     "BUSINESS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:10298305011",
@@ -30,8 +30,23 @@ class categoryies:
     "TRAVEL" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408785011",
     "UTILITIES" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408914011", 
     "WEATHER" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408850011",
-    "BOOK_INFO_REVIEWS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408444011,n:9408446011",
-    "READERS_PLAYERS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408444011,n:9408445011",
     "ACTION" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408529011",
+    "ADVENTURE" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408530011",
+    "ARCADE" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408531011",
+    "BOARD" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408532011",
+    "BRAIN_PUZZLE" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408533011",
+    "CARDS" : "http://www.amazon.com/s/=rh=n:2350149011,n:!9209898011,n:9209902011,n:9408534011",
+    "CASINO" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408535011",
+    "DICE" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408536011",
+    "FANTASY_SPORTS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408877011",
+    "MUSIC_RHYTHM" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408537011",
+    "RACING" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408538011",
+    "ROLE_PLAYING" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408539011",
+    "SEEK_FIND" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408541011",
+    "SIMULATION" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408542011",
+    "SPORTS_GAMES" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408543011",
+    "STRATEGY" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408578011",
+    "TRIVIA" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408579011",
+    "WORDS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408580011"
     }
     

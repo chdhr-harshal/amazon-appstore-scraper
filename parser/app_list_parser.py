@@ -9,14 +9,18 @@ class parser:
         self.html = filter(lambda x: x in string.printable, html)
         self.soup = bs(self.html, "lxml")
 
-    def get_asins(self):
-        apps = self.soup.findAll('li', {'class':'s-result-item s-result-card-for-container a-declarative celwidget'})
-        asins = [app['data-asin'] for app in apps]
-        return asins
-
     def pagination_next_list_page(self):
         pagination = self.soup.find('a', {'id':'pagnNextLink'})
         if pagination:
             return True
         else:
             return False
+    
+    def get_asins(self):
+        apps = self.soup.findAll('li', {'class':'s-result-item s-result-card-for-container a-declarative celwidget'})
+        asins = [app['data-asin'] for app in apps]
+
+        next_page_exists = self.pagination_next_list_page()
+
+        return (asins, next_page_exists)
+

@@ -1,0 +1,37 @@
+# !/home/grad3/harshal/py_env/my_env/bin/python2.7
+
+class categoryies:
+    urls : {
+    "BOOKS_COMICS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408444011",
+    "BUSINESS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:10298305011",
+    "COMMUNICATION" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408466011",
+    "CUSTOMIZATION" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408481011",
+    "EDUCATION" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408490011",
+    "FINANCE" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408433011",
+    "FOOD_DRINK" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408523011", 
+    "GAMES" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011",
+    "HEALTH_FITNESS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408749011",
+    "KIDS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408582011",
+    "LIFESTYLE" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408710011",
+    "LOCAL" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:10298309011",
+    "MAGAZINES" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408805011", 
+    "MEDICAL" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:10298306011",
+    "MOVIES_TV" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408765011",
+    "MUSIC_AUDIO" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408771011",
+    "NEWS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408802011",
+    "NOVELTY" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408852011",
+    "PHOTO_VIDEO" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408874011",
+    "PRODUCTIVITY" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408449011",
+    "REFERENCE" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408491011",
+    "SHOPPING" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408875011",
+    "SOCIAL" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408464011",
+    "SPORTS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408876011",
+    "TRANSPORTATION" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:10298308011",
+    "TRAVEL" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408785011",
+    "UTILITIES" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408914011", 
+    "WEATHER" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408850011",
+    "BOOK_INFO_REVIEWS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408444011,n:9408446011",
+    "READERS_PLAYERS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408444011,n:9408445011",
+    "ACTION" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9209902011,n:9408529011",
+    }
+    

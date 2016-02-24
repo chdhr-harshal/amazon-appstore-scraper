@@ -10,6 +10,16 @@ class parser:
         self.html = filter(lambda x: x in string.printable, html)
         self.soup = bs(self.html, "lxml")
 
+    def pagination_next_review_page(self):
+        pagination = self.soup.find('ul', {'class':'a-pagination'})
+        if pagination is None:
+            return False
+        next_page = self.soup.find('li', {'class':'a-disabled a-last'})
+        if next_page is None:
+            return True
+        else:
+            return False
+
     def get_reviews(self):
         reviews_data = []
         container = self.soup.find('div', {'id':'cm_cr-review_list'})
@@ -79,5 +89,6 @@ class parser:
                 })
 
 
+        next_page_exists = self.pagination_next_review_page()
 
-        return reviews_data 
+        return (reviews_data, next_page_exists)

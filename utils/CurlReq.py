@@ -4,6 +4,8 @@ import subprocess
 import random
 import urllib
 from fake_useragent import UserAgent
+import pycurl
+import cStringIO
 
 # Read proxy credentials
 f = open('/research/analytics/proxylist/proxy_credentials','r')
@@ -26,7 +28,49 @@ class request():
         self.ua = UserAgent()
         self.proxy = proxy
 
+
     def fetch(self, url, data=None):
+        c = pycurl.Curl()
+        c.setopt(pycurl.URL, url)
+
+        buff = cStringIO.StringIO()
+        hdr = cStringIO.StringIO()
+        
+        c.setopt(pycurl.HEADERFUNCTION, hdr.write)
+        c.setopt(pycurl.WRITEFUNCTION, buff.write)
+
+        c.setopt(pycurl.TIMEOUT, 10)
+        c.setopt(pycurl.USERAGENT, self.ua.random)
+
+        if data:
+            c.setopt(pycurl.POSTFIELDS, urllib.urlencode(data))
+        
+        if self.proxy == False:
+            # Make request without proxy
+            c.perform()
+        else:
+            c.setopt(pycurl.PROXYUSERPWD, "{0}:{1}".format(username, password))
+
+            ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
+            key = random.random()
+            if key < ratio:
+                # Make request through http proxy
+                rand = random.randint(0, len(self.http_proxy_list)-1)
+                proxy = self.http_proxy_list[rand]
+                c.setopt(pycurl.PROXY, "https://{0}".format(proxy))
+                c.perform()                
+            else:
+                # Make request through socks proxy
+                rand = random.randint(0, len(self.socks_proxy_list)-1)
+                proxy = self.socks_proxy_list[rand]
+                c.setopt(pycurl.PROXY, proxy.split(':')[0])
+                c.setopt(pycurl.PROXYPORT, proxy.split(':')[1])
+                c.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5_HOSTNAME)
+                c.perform()
+
+        return (c.getinfo(pycurl.HTTP_CODE), buff.getvalue())
+                
+    def fetch1(self, url, data=None):
         if self.proxy == False:
             # Make request without any proxy
             cmd = """curl -i """

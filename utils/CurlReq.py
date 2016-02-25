@@ -64,7 +64,7 @@ class request():
                 rand = random.randint(0, len(self.socks_proxy_list)-1)
                 proxy = self.socks_proxy_list[rand]
                 c.setopt(pycurl.PROXY, proxy.split(':')[0])
-                c.setopt(pycurl.PROXYPORT, proxy.split(':')[1])
+                c.setopt(pycurl.PROXYPORT, int(proxy.split(':')[1]))
                 c.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5_HOSTNAME)
                 c.perform()
 

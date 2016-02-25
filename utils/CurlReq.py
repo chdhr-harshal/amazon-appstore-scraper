@@ -45,10 +45,7 @@ class request():
         if data:
             c.setopt(pycurl.POSTFIELDS, urllib.urlencode(data))
         
-        if self.proxy == False:
-            # Make request without proxy
-            c.perform()
-        else:
+        if self.proxy == True:
             c.setopt(pycurl.PROXYUSERPWD, "{0}:{1}".format(username, password))
 
             ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
@@ -57,8 +54,7 @@ class request():
                 # Make request through http proxy
                 rand = random.randint(0, len(self.http_proxy_list)-1)
                 proxy = self.http_proxy_list[rand]
-                c.setopt(pycurl.PROXY, "https://{0}".format(proxy))
-                c.perform()                
+                c.setopt(pycurl.PROXY, "https://{0}".format(proxy))             
             else:
                 # Make request through socks proxy
                 rand = random.randint(0, len(self.socks_proxy_list)-1)
@@ -66,48 +62,19 @@ class request():
                 c.setopt(pycurl.PROXY, proxy.split(':')[0])
                 c.setopt(pycurl.PROXYPORT, int(proxy.split(':')[1]))
                 c.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5_HOSTNAME)
-                c.perform()
+        try:
+            c.perform()
+        except pycurl.error, e:
+            # If it was a 'User rejected or Connection refused error
+            # remove proxy from the list
+            if e[0] == 7:
+                try:
+                    self.socks_proxy_list.remove(proxy)
+                except:
+                    self.http_proxy_list.remove(proxy)
+            return e
 
         return (c.getinfo(pycurl.HTTP_CODE), buff.getvalue())
-                
-    def fetch1(self, url, data=None):
-        if self.proxy == False:
-            # Make request without any proxy
-            cmd = """curl -i """
-        else:
-            ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
-            key = random.random() 
-            if key < ratio:
-                # Make request through http proxy
-                rand = random.randint(0, len(self.http_proxy_list)-1)
-                proxy = self.http_proxy_list[rand]
-                cmd = """curl -i --proxy https://{0} """.format(proxy)
-            else:
-                # Make request through socks proxy
-                rand = random.randint(0, len(self.socks_proxy_list)-1)
-                proxy = self.socks_proxy_list[rand]
-                cmd = """curl -i --socks5-hostname {0} """.format(proxy)
-
-            # Authentication and timeout parameters
-            cmd += "--proxy-user {0}:{1} ".format(username, password)
-        
-        # Parts of command common for both proxy and no proxy requests
-        cmd += "--connect-timeout 5 "
-        cmd += "--retry 1 " 
-        # Data for POST request 
-        if data:
-            cmd += """--data {0} """.format(urllib.urlencode(data))
-        
-        cmd += """--user-agent {0} """.format(self.ua.random)
-        cmd += url
-
-        args = cmd.split()
-        process = subprocess.Popen(args, shell=False,   \
-                                stdout=subprocess.PIPE, \
-                                stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
-
-        return (stdout, stderr)
 
     def read_http_proxy_list(self):
         with open('/research/analytics/proxylist/http_proxylist/proxylist') as f:

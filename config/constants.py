@@ -1,6 +1,8 @@
 # !/home/grad3/harshal/py_env/my_env/bin/python2.7
 
 class constants:
+
+    # Proxy usage constants
     http_proxy_list = '/research/analytics/proxylist/http_proxylist/proxylist'
     socks_proxy_list = '/research/analytics/proxylist/socks5_proxylist/proxylist'
 
@@ -31,6 +33,16 @@ class constants:
         with open(socks_proxy_list) as f:
             proxies = f.readlines()
         socks_proxies = [proxy.strip() for proxy in proxies]
+
+
+    # Database access constants for mysql database
+    # To be done : Add support for mongoDB
+
+    database_server = 'ist-www-mysql-prod.bu.edu'
+    database_port = '3309'
+    database_name = 'amazon_appstore'
+    database_username = 'amazon_appstore'
+    database_password = 'sP7sw8chuchu'
 
 class categories:
     urls = {

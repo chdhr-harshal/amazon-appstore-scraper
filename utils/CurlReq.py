@@ -11,13 +11,13 @@ import pycurl
 import cStringIO
 from config.constants import constants
 
-class request():
-    def __init__(self, use_proxy=False):
-        """
-        Class constructor
-        Reads proxies from constants.py
-        """
+class request:
+    """
+    This class handles all requests using pyCurl
+    Handles proxy usage if use_proxy is set True
+    """
 
+    def __init__(self, use_proxy=False):
         if use_proxy:
             self.proxy_authentication = constants.proxy_authentication
             self.username = constants.proxy_username
@@ -34,7 +34,8 @@ class request():
     def set_proxy(self, curl):
         """
         Selects randomly between all available HTTP and SOCKS proxies
-        returns curl object
+
+        returns: curl object
         """
 
         self.last_sent_proxy = random.choice(self.http_proxy_list + self.socks_proxy_list)
@@ -65,7 +66,8 @@ class request():
     def fetch(self, url, data=None):
         """
         Fetches html webpage for given url
-        return tuple (http_status_code, page source of url)
+
+        returns: tuple (http_status_code, page source of url)
         """
 
         c = pycurl.Curl()

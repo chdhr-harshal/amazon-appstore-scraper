@@ -39,7 +39,7 @@ class constants:
     # To be done : Add support for mongoDB
 
     database_server = 'ist-www-mysql-prod.bu.edu'
-    database_port = '3309'
+    database_port = 3309
     database_name = 'amazon_appstore'
     database_username = 'amazon_appstore'
     database_password = 'sP7sw8chuchu'

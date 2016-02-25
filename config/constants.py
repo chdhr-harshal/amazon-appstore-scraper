@@ -1,7 +1,39 @@
 # !/home/grad3/harshal/py_env/my_env/bin/python2.7
 
+class constants:
+    http_proxy_list = '/research/analytics/proxylist/http_proxylist/proxylist'
+    socks_proxy_list = '/research/analytics/proxylist/socks5_proxylist/proxylist'
+
+    proxy_authentication = True
+    proxy_credentials = '/research/analytics/proxylist/proxy_credentials'
+
+    if proxy_authentication:
+        assert proxy_credentials is not None, "Provide proxy credentials file path"
+
+    proxy_username = None
+    proxy_password = None
+    http_proxies = []
+    socks_proxies = []
+   
+    if proxy_credentials: 
+        f = open(proxy_credentials)
+        rows = f.readlines()
+        proxy_username = rows[0].strip().split(':')[1]
+        proxy_password = rows[1].strip().split(':')[1]
+        f.close()
+
+    if http_proxy_list:
+        with open(http_proxy_list) as f:
+            proxies = f.readlines()
+        http_proxies = [proxy.strip() for proxy in proxies]
+
+    if socks_proxy_list:
+        with open(socks_proxy_list) as f:
+            proxies = f.readlines()
+        socks_proxies = [proxy.strip() for proxy in proxies]
+
 class categories:
-    urls : {
+    urls = {
     "BOOKS_COMICS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408444011",
     "BUSINESS" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:10298305011",
     "COMMUNICATION" : "http://www.amazon.com/s/rh=n:2350149011,n:!9209898011,n:9408466011",

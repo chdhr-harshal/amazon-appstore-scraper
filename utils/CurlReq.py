@@ -1,68 +1,73 @@
 # !/home/grad3/harshal/py_env/my_env/bin/python2.7
 
-import subprocess
+# Append root directory to system path
+import sys
+sys.path.append('..')
+
 import random
 import urllib
 from fake_useragent import UserAgent
 import pycurl
 import cStringIO
+from config.constants import constants
 
 class request():
     def __init__(self, use_proxy=False):
-        
-        self.http_proxy_list = []
-        self.socks_proxy_list = []
+        """
+        Class constructor
+        Reads proxies from constants.py
+        """
 
         if use_proxy:
-            # Read proxy credentials
-            f = open('/research/analytics/proxylist/proxy_credentials','r')
-            rows = f.readlines()
-            f.close()
-            
-            self.username = rows[0].strip().split(':')[1]
-            self.password = rows[1].strip().split(':')[1]
+            self.proxy_authentication = constants.proxy_authentication
+            self.username = constants.proxy_username
+            self.password = constants.proxy_password
+            self.http_proxy_list = constants.http_proxies
+            self.socks_proxy_list = constants.socks_proxies
 
-            self.read_http_proxy_list()
-            self.read_socks_proxy_list()
-        
         self.ua = UserAgent()
         self.use_proxy = use_proxy
         self.last_sent_proxy_type = None
         self.last_sent_proxy = None
 
+
     def set_proxy(self, curl):
-        ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
-        key = random.random()
+        """
+        Selects randomly between all available HTTP and SOCKS proxies
+        returns curl object
+        """
 
-        if key < ratio:
-            # Set http proxy
-            rand = random.randint(0, len(self.http_proxy_list)-1)
-            proxy = self.http_proxy_list[rand]
-            curl.setopt(pycurl.PROXY, proxy.split(':')[0])
-            curl.setopt(pycurl.PROXYPORT, int(proxy.split(':')[1]))
-            curl.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_HTTP)
-
+        self.last_sent_proxy = random.choice(self.http_proxy_list + self.socks_proxy_list)
+        if self.last_sent_proxy in self.http_proxy_list:
             self.last_sent_proxy_type = 'HTTP'
-            self.last_sent_proxy = proxy
+            curl.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_HTTP)
         else:
-            # Set socks proxy
-            rand = random.randint(0, len(self.socks_proxy_list)-1)
-            proxy = self.socks_proxy_list[rand]
-            curl.setopt(pycurl.PROXY, proxy.split(':')[0])
-            curl.setopt(pycurl.PROXYPORT, int(proxy.split(':')[1]))
+            self.last_sent_proxy_type = 'SOCKS'
             curl.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5_HOSTNAME)
 
-            self.last_sent_proxy_type = 'SOCKS'
-            self.last_sent_proxy = proxy
+        curl.setopt(pycurl.PROXY, self.last_sent_proxy.split(':')[0])
+        curl.setopt(pycurl.PROXYPORT, int(self.last_sent_proxy.split(':')[1]))
+
         return curl
 
+
     def remove_proxy(self):
+        """
+        Removes rogue proxies from the lists
+        """
+
         if self.last_sent_proxy_type == 'HTTP':
             self.http_proxy_list.remove(self.last_sent_proxy)
         else:
             self.socks_proxy_list.remove(self.last_sent_proxy)
 
+
     def fetch(self, url, data=None):
+        """
+        Fetches html webpage for given url
+        return tuple (http_status_code, page source of url)
+        """
+
         c = pycurl.Curl()
         c.setopt(pycurl.URL, url)
 
@@ -79,7 +84,8 @@ class request():
             c.setopt(pycurl.POSTFIELDS, urllib.urlencode(data))
         
         if self.use_proxy:
-            c.setopt(pycurl.PROXYUSERPWD, "{0}:{1}".format(self.username, self.password))
+            if self.proxy_authentication:
+                c.setopt(pycurl.PROXYUSERPWD, "{0}:{1}".format(self.username, self.password))
             c = self.set_proxy(c)
 
         while True:
@@ -90,16 +96,3 @@ class request():
                 c = self.set_proxy(c)
             else:
                 return (c.getinfo(pycurl.HTTP_CODE), buff.getvalue())
-
-    def read_http_proxy_list(self):
-        with open('/research/analytics/proxylist/http_proxylist/proxylist') as f:
-            proxies = f.readlines()
-
-        self.http_proxy_list = [proxy.strip() for proxy in proxies]
- 
-    def read_socks_proxy_list(self):
-        with open('/research/analytics/proxylist/socks5_proxylist/proxylist') as f:
-            proxies = f.readlines()
-
-        self.socks_proxy_list = [proxy.strip() for proxy in proxies]
-

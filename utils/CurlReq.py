@@ -29,7 +29,7 @@ class request():
     def fetch(self, url, data=None):
         if self.proxy == False:
             # Make request without any proxy
-            cmd = """curl """
+            cmd = """curl -i """
         else:
             ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
             key = random.random() 
@@ -37,12 +37,12 @@ class request():
                 # Make request through http proxy
                 rand = random.randint(0, len(self.http_proxy_list)-1)
                 proxy = self.http_proxy_list[rand]
-                cmd = """curl --proxy https://{0} """.format(proxy)
+                cmd = """curl -i --proxy https://{0} """.format(proxy)
             else:
                 # Make request through socks proxy
                 rand = random.randint(0, len(self.socks_proxy_list)-1)
                 proxy = self.socks_proxy_list[rand]
-                cmd = """curl --socks5-hostname {0} """.format(proxy)
+                cmd = """curl -i --socks5-hostname {0} """.format(proxy)
 
             # Authentication and timeout parameters
             cmd += "--proxy-user {0}:{1} ".format(username, password)

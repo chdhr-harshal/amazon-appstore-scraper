@@ -7,27 +7,60 @@ from fake_useragent import UserAgent
 import pycurl
 import cStringIO
 
-# Read proxy credentials
-f = open('/research/analytics/proxylist/proxy_credentials','r')
-rows = f.readlines()
-f.close()
-
-# Or you can manually specify it right below
-username = rows[0].strip().split(':')[1]
-password = rows[1].strip().split(':')[1]
-
 class request():
-    def __init__(self, proxy=False):
+    def __init__(self, use_proxy=False):
         
         self.http_proxy_list = []
         self.socks_proxy_list = []
 
-        self.read_http_proxy_list()
-        self.read_socks_proxy_list()
+        if use_proxy:
+            # Read proxy credentials
+            f = open('/research/analytics/proxylist/proxy_credentials','r')
+            rows = f.readlines()
+            f.close()
+            
+            self.username = rows[0].strip().split(':')[1]
+            self.password = rows[1].strip().split(':')[1]
+
+            self.read_http_proxy_list()
+            self.read_socks_proxy_list()
         
         self.ua = UserAgent()
-        self.proxy = proxy
+        self.use_proxy = use_proxy
+        self.last_sent_proxy_type = None
+        self.last_sent_proxy = None
 
+    def set_proxy(self, curl):
+        ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
+        key = random.random()
+
+        if key < ratio:
+            # Set http proxy
+            rand = random.randint(0, len(self.http_proxy_list)-1)
+            proxy = self.http_proxy_list[rand]
+            curl.setopt(pycurl.PROXY, proxy.split(':')[0])
+            curl.setopt(pycurl.PROXYPORT, int(proxy.split(':')[1]))
+            curl.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_HTTP)
+
+            self.last_sent_proxy_type = 'HTTP'
+            self.last_sent_proxy = proxy
+        else:
+            # Set socks proxy
+            rand = random.randint(0, len(self.socks_proxy_list)-1)
+            proxy = self.socks_proxy_list[rand]
+            curl.setopt(pycurl.PROXY, proxy.split(':')[0])
+            curl.setopt(pycurl.PROXYPORT, int(proxy.split(':')[1]))
+            curl.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5_HOSTNAME)
+
+            self.last_sent_proxy_type = 'SOCKS'
+            self.last_sent_proxy = proxy
+        return curl
+
+    def remove_proxy(self):
+        if self.last_sent_proxy_type == 'HTTP':
+            self.http_proxy_list.remove(self.last_sent_proxy)
+        else:
+            self.socks_proxy_list.remove(self.last_sent_proxy)
 
     def fetch(self, url, data=None):
         c = pycurl.Curl()
@@ -45,36 +78,18 @@ class request():
         if data:
             c.setopt(pycurl.POSTFIELDS, urllib.urlencode(data))
         
-        if self.proxy == True:
-            c.setopt(pycurl.PROXYUSERPWD, "{0}:{1}".format(username, password))
+        if self.use_proxy:
+            c.setopt(pycurl.PROXYUSERPWD, "{0}:{1}".format(self.username, self.password))
+            c = self.set_proxy(c)
 
-            ratio = 1.0 * len(self.http_proxy_list) / len(self.socks_proxy_list)
-            key = random.random()
-            if key < ratio:
-                # Make request through http proxy
-                rand = random.randint(0, len(self.http_proxy_list)-1)
-                proxy = self.http_proxy_list[rand]
-                c.setopt(pycurl.PROXY, "https://{0}".format(proxy))             
+        while True:
+            try:
+                c.perform()
+            except pycurl.error, e:
+                self.remove_proxy()
+                c = self.set_proxy(c)
             else:
-                # Make request through socks proxy
-                rand = random.randint(0, len(self.socks_proxy_list)-1)
-                proxy = self.socks_proxy_list[rand]
-                c.setopt(pycurl.PROXY, proxy.split(':')[0])
-                c.setopt(pycurl.PROXYPORT, int(proxy.split(':')[1]))
-                c.setopt(pycurl.PROXYTYPE, pycurl.PROXYTYPE_SOCKS5_HOSTNAME)
-        try:
-            c.perform()
-        except pycurl.error, e:
-            # If it was a 'User rejected or Connection refused error
-            # remove proxy from the list
-            if e[0] == 7:
-                try:
-                    self.socks_proxy_list.remove(proxy)
-                except:
-                    self.http_proxy_list.remove(proxy)
-            return e
-
-        return (c.getinfo(pycurl.HTTP_CODE), buff.getvalue())
+                return (c.getinfo(pycurl.HTTP_CODE), buff.getvalue())
 
     def read_http_proxy_list(self):
         with open('/research/analytics/proxylist/http_proxylist/proxylist') as f:

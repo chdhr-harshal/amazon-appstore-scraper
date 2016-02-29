@@ -78,6 +78,8 @@ class request:
         
         c.setopt(pycurl.HEADERFUNCTION, hdr.write)
         c.setopt(pycurl.WRITEFUNCTION, buff.write)
+        c.setopt(pycurl.COOKIEJAR, '.cookiejar')
+        c.setopt(pycurl.COOKIEFILE, '.cookiejar')
 
         c.setopt(pycurl.TIMEOUT, 10)
         c.setopt(pycurl.USERAGENT, self.ua.random)

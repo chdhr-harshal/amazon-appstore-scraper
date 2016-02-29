@@ -31,8 +31,10 @@ class parser:
             asin = review.find('a', {'class':'a-link-normal'})['href'].split('=')[-1]
 
             star_rating = review.find('span', {'class':'a-icon-alt'}).next.split(' ')[0]
-
-            title = review.find('a', {'class':'a-size-base a-link-normal review-title a-color-base a-text-bold'}).next.replace('"','').replace("'","")
+            try:
+                title = review.find('a', {'class':'a-size-base a-link-normal review-title a-color-base a-text-bold'}).next.replace('"','').replace("'","")
+            except:
+                title = None
 
             reviewer = review.find('a', {'class':'a-size-base a-link-normal author'})['href'].split('/')[4]
 
@@ -41,24 +43,26 @@ class parser:
 
             date = review.find('span', {'class':'a-size-base a-color-secondary review-date'}).next.strip('on ')
             date = datetime.strptime(date, "%B %d, %Y").strftime("%Y-%m-%d")
-
-            review_text = review.find('span', {'class':'a-size-base review-text'}).next.replace("'","").replace('"','')
-
-
-            comments = review.find('span', {'class':'review-comment-total'}).next
+            
             try:
+                review_text = review.find('span', {'class':'a-size-base review-text'}).next.replace("'","").replace('"','')
+            except:
+                review_text = None
+
+            try:
+                comments = review.find('span', {'class':'review-comment-total'}).next
                 comments = int(comments)
             except:
                 comments = 0
 
-            total_votes = review.find('span',{'class':'a-size-small a-color-secondary review-votes'}).next.split(' ')[2].replace(',','')
             try:
+                total_votes = review.find('span',{'class':'a-size-small a-color-secondary review-votes'}).next.split(' ')[2].replace(',','')
                 total_votes = int(total_votes)
             except:
                 total_votes = 0
 
-            upvotes = review.find('span', {'class':'a-size-small a-color-secondary review-votes'}).next.split(' ')[0].replace(',','')
             try:
+                upvotes = review.find('span', {'class':'a-size-small a-color-secondary review-votes'}).next.split(' ')[0].replace(',','')
                 upvotes = int(upvotes)
             except:
                 upvotes = 0
@@ -88,7 +92,4 @@ class parser:
                 'type' : review_type
                 })
 
-
-        next_page_exists = self.pagination_next_review_page()
-
-        return (reviews_data, next_page_exists)
+        return reviews_data

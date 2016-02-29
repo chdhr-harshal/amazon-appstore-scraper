@@ -46,11 +46,7 @@ class crawler:
             return False
             
 
-        
-            
-
     def crawl_list(self):
-        
         while self.next_page_exists:
             # Amazon only shows first 400 pages of results
             if self.current_page > self.max_pages:
@@ -66,6 +62,4 @@ class crawler:
                 self.current_page += 1
             else:
                 continue
-
-
         return self.asin_list

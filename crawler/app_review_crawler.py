@@ -61,9 +61,8 @@ class crawler:
 def get_argument_parser():
     parser = argparse.ArgumentParser(description='Review crawler \
                                                  for provided ASIN')
-    parser.add_argument('--asin',
+    parser.add_argument('asin',
                         type=str,
-                        required=True,
                         help='ASIN of app')
     
     parser.add_argument('--use-proxy',

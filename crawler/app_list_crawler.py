@@ -1,4 +1,4 @@
-# !/home/grad3/harshal/py_env/my_env/bin/python2.7
+#!/home/grad3/harshal/py_env/my_env/bin/python2.7
 
 # Append root directory to system path
 import sys
@@ -6,11 +6,12 @@ sys.path.append('..')
 
 from utils.CurlReq import request
 from amazon_parser.app_list_parser import parser
+import argparse
 
 class crawler:
     
-    def __init__(self, list_index, use_proxy):
-        self.list_index = list_index
+    def __init__(self, node_index, use_proxy):
+        self.node_index = node_index
         self.next_page_exists = True
         self.use_proxy = use_proxy
 
@@ -52,7 +53,7 @@ class crawler:
             if self.current_page > self.max_pages:
                 break
 
-            url = self.app_list_url.format(self.list_index, self.current_page)
+            url = self.app_list_url.format(self.node_index, self.current_page)
             result = self.r.fetch(url)
 
             if self.check_result(result):
@@ -63,3 +64,26 @@ class crawler:
             else:
                 continue
         return self.asin_list
+
+def get_argument_parser():
+    parser = argparse.ArgumentParser(description='App list parser')
+
+    parser.add_argument('node',
+                        type=str,
+                        help='Amazon app list node id')
+
+    parser.add_argument('--use-proxy',
+                        action='store_true',
+                        help='Use proxy')
+
+    return parser
+
+def main():
+    print "Entered main method"
+    args_parser = get_argument_parser()
+    args = args_parser.parse_args()
+    cr = crawler(args.node, args.use_proxy)
+    asins = cr.crawl_list()
+
+if __name__ == "__main__":
+    main()

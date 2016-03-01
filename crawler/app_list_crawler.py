@@ -10,7 +10,7 @@ import argparse
 
 class crawler:
     
-    def __init__(self, node_index, use_proxy):
+    def __init__(self, node_index, use_proxy=False):
         self.node_index = node_index
         self.next_page_exists = True
         self.use_proxy = use_proxy

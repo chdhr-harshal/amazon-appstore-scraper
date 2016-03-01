@@ -31,7 +31,10 @@ class parser:
         return mas_rating.strip()
 
     def get_price(self):
-        price = self.soup.find('strong', {'class':'priceLarge'}).next.strip()
+        try:
+            price = self.soup.find('strong', {'class':'priceLarge'}).next.strip()
+        except:
+            price = self.soup.find('span', {'class':'banjoPrice'}).text.strip()
         return price
 
     def get_iap(self):

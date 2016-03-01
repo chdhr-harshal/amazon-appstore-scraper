@@ -1,4 +1,4 @@
-# !/home/grad3/harshal/py_env/my_env/bin/python2.7
+#!/home/grad3/harshal/py_env/my_env/bin/python2.7
 
 # Append root directory to sytem path
 import sys
@@ -6,6 +6,7 @@ sys.path.append('..')
 
 from utils.CurlReq import request
 from amazon_parser.app_review_parser import parser
+import argparse
 
 class crawler:
 
@@ -55,3 +56,28 @@ class crawler:
             else:
                 continue
         return self.reviews
+
+
+def get_argument_parser():
+    parser = argparse.ArgumentParser(description='Review crawler \
+                                                 for provided ASIN')
+    parser.add_argument('--asin',
+                        type=str,
+                        required=True,
+                        help='ASIN of app')
+    
+    parser.add_argument('--use-proxy',
+                        action='store_true',
+                        help='Use proxy')
+
+    return parser
+
+def main():
+    args_parser = get_argument_parser()
+    args = args_parser.parse_args()
+    cr = crawler(args.asin, args.use_proxy)
+    reviews = cr.crawl_reviews()
+    return reviews
+
+if __name__ == "__main__":
+    main()

@@ -79,7 +79,6 @@ def get_argument_parser():
     return parser
 
 def main():
-    print "Entered main method"
     args_parser = get_argument_parser()
     args = args_parser.parse_args()
     cr = crawler(args.node, args.use_proxy)

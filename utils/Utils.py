@@ -1,7 +1,12 @@
 # !/home/grad3/harshal/py_env/my_env/bin/python2.7
 
+# Append root directory to system path
+import sys
+sys.path.append('..')
+
 import logging
 import random
+from config.constants import constants
 
 class Utils:
     """
@@ -41,7 +46,7 @@ class Utils:
 
 
     @staticmethod
-    def configure_log(args):
+    def configure_log():
         """
         Configures the logger object that is used
         for logging to both CLI output and file
@@ -49,8 +54,8 @@ class Utils:
         returns : An instance of a logger class
         """
     
-        cli_log_verbosity = args['console_log_verbosity']
-        file_log_verbosity = args['file_log_verbosity']
+        cli_log_verbosity = constants.console_log_verbosity
+        file_log_verbosity = constants.file_log_verbosity
 
         # Console log Level
         cli_log_level = Utils.get_log_level_from_string(cli_log_verbosity)
@@ -67,8 +72,8 @@ class Utils:
         logger.addHandler(cli_handler)
 
         # Check for the need to create a log file
-        if args['log_file']:
-            file_handler = logging.FileHandler(args['log_file'])
+        if constants.log_file:
+            file_handler = logging.FileHandler(constants.log_file)
             file_handler.setLevel(file_log_level)
             file_handler.setFormatter(formatter)
             logger.addHandler(file_handler)

@@ -1,6 +1,13 @@
-# !/home/grad3/harshal/py_env/my_env/bin/python2.7
+#!/home/grad3/harshal/py_env/my_env/bin/python2.7
 
 class constants:
+
+    # Logger constants. Choose between - 
+    # INFO, DEBUG, WARN, ERROR, CRITICAL
+
+    console_log_verbosity = 'INFO'
+    file_log_verbosity = 'ERROR'
+    log_file = "./log/log"
 
     # Proxy usage constants
     http_proxy_list = '/research/analytics/proxylist/http_proxylist/proxylist'
